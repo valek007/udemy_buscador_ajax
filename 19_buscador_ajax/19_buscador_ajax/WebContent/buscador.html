@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var objAjax=new XMLHttpRequest();
+	function buscar(){
+		//obtenemos el valor introducido en el campo de texto
+		//para mandarlo como parámetro en la petición
+		var texto=document.getElementById("nombre").value;
+		//configuramos la url con los parámetros a enviar al controller
+		var url="Controller?op=doBuscar";
+		url+="&textoNombre="+texto;
+		//configurar datos de la peticion
+		objAjax.open("GET", url, true);
+		//definir función de retrollamada
+		objAjax.onreadystatechange=procesarRespuesta;
+		//lanzar la petición
+		objAjax.send(null);
+
+	}
+	function procesarRespuesta(){
+		//si la respuesta está disponible, se procesa
+		if(objAjax.readyState==4){
+			//trasnforma la cadena de texto en una estructura JSON
+			var json=JSON.parse(objAjax.responseText);
+			var respuesta="<ul>";
+			//recorre el array de objetos y para cada uno genera un elemento de lista
+			json.forEach(function(ob){
+				respuesta+="<li>"+ob.nombre+" - "+ob.email+" - "+ob.telefono+"</li>";
+			});
+			respuesta+="</ul>";
+			document.getElementById("resultado").innerHTML=respuesta;
+		}
+		
+	}
+
+</script>
+</head>
+<body>
+<center>
+	<h1>Página de búsqueda de contactos</h1>
+	<br/>
+	Introduce nombre: <input type="text" id="nombre" onkeyup="buscar();"/>
+	<br/>
+	<br/>
+</center>
+	<div id="resultado">
+		
+	</div>
+
+</body>
+</html>
